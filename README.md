@@ -30,33 +30,38 @@ A **Job Portal System** that connects job seekers and employers. This system all
    Execute the following SQL commands to set up the required tables:
 
    ```sql
-   CREATE DATABASE job_portal;
+   CREATE DATABASE JobPortalSystemDB;
 
-   USE job_portal;
+   USE JobPortalSystemDB;
 
-   CREATE TABLE users (
-       id INT AUTO_INCREMENT PRIMARY KEY,
-       name VARCHAR(100),
-       email VARCHAR(100) UNIQUE,
-       password VARCHAR(100),
-       role ENUM('job_seeker', 'employer') NOT NULL
+   CREATE TABLE Users (
+     user_id INT AUTO_INCREMENT PRIMARY KEY, 
+     username VARCHAR(50) NOT NULL UNIQUE,   
+     password VARCHAR(100) NOT NULL,         
+     role ENUM('JobSeeker', 'Employer') NOT NULL, 
+     full_name VARCHAR(100),                 
+     contact_email VARCHAR(100)              
    );
 
-   CREATE TABLE jobs (
-       id INT AUTO_INCREMENT PRIMARY KEY,
-       title VARCHAR(255),
-       description TEXT,
-       employer_id INT,
-       FOREIGN KEY (employer_id) REFERENCES users(id)
+   CREATE TABLE Jobs (
+     job_id INT AUTO_INCREMENT PRIMARY KEY,  
+     title VARCHAR(100) NOT NULL, 
+     industry VARCHAR(50),
+     company_name VARCHAR(100) NOT NULL,                       
+     salary INT, 
+     job_type ENUM('Full-Time', 'Part-Time') NOT NULL, 
+     posted_by INT NOT NULL,                 
+     FOREIGN KEY (posted_by) REFERENCES Users(user_id) 
    );
 
-   CREATE TABLE applications (
-       id INT AUTO_INCREMENT PRIMARY KEY,
-       job_id INT,
-       job_seeker_id INT,
-       status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
-       FOREIGN KEY (job_id) REFERENCES jobs(id),
-       FOREIGN KEY (job_seeker_id) REFERENCES users(id)
+   CREATE TABLE Applications (
+     application_id INT AUTO_INCREMENT PRIMARY KEY, 
+     job_id INT NOT NULL,                           
+     applicant_id INT NOT NULL,                     
+     application_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+     status ENUM('Pending', 'Accepted', 'Rejected') DEFAULT 'Pending',
+     FOREIGN KEY (job_id) REFERENCES Jobs(job_id),   
+     FOREIGN KEY (applicant_id) REFERENCES Users(user_id) 
    );
 
 ## Instructions for Running the Program
